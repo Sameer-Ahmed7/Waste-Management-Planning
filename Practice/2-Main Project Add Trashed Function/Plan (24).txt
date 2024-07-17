@@ -1,0 +1,2 @@
+(move person organic_bin pos_1 pos_4)
+(trashed person organic_bin organic pos_4)

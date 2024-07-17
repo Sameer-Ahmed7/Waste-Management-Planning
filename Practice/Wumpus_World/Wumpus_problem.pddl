@@ -1,0 +1,16 @@
+(define(problem Wumpus_problem)
+(:domain Wumpus_World)
+(:objects sq_1_1 sq_1_2 sq_1_3 sq_2_1 sq_2_2 sq_2_3 gold wumpus pit agent arrow)
+(:init 
+
+       (is_agent agent) (at agent sq_1_1) (at gold sq_1_3) (at arrow sq_2_1)(pit sq_1_2)(wumpus sq_2_3)
+       (is_arrow arrow)
+       (adjacent sq_1_1 sq_1_2) (adjacent sq_1_2 sq_1_1) (adjacent sq_1_1 sq_2_1)(adjacent sq_2_1 sq_1_1)
+       (adjacent sq_1_2 sq_2_2) (adjacent sq_2_2 sq_1_2) (adjacent sq_1_2 sq_1_3)(adjacent sq_1_3 sq_1_2)
+       (adjacent sq_1_3 sq_2_3) (adjacent sq_2_3 sq_1_3) (adjacent sq_2_2 sq_2_3) (adjacent sq_2_3 sq_2_2)
+       (adjacent sq_2_1 sq_2_2)
+    (adjacent sq_2_2 sq_2_1)
+       )
+(:goal (and(at agent sq_1_1)(have agent gold))
+)
+)

@@ -1,0 +1,3 @@
+(move person organic_bin pos_1 pos_4)
+(empty_trashed person organic_bin bag pos_4)
+(half_trashed person organic_bin organic pos_4)

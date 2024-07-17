@@ -1,0 +1,185 @@
+(define (domain Waste_domain)
+  (:requirements :strips :typing :action-costs)
+
+  ;; Types
+  (:types
+    DustBin location Bags Room Human HumanCarry garbageSubstance CityBin Truck Time quantity Dumpyard - object ; ALl Objects Define
+    organicBin paperBin plasticBin - DustBin ; Different Dustbins
+    organicCityBin paperCityBin plasticCityBin - CityBin ; Different CityBins
+    newBag oldBag - Bags ; Differents Bags (New Bags Means Empty Bags, OldBags means previous filled bags)
+    
+    
+  )
+
+  ;; Predicates
+  (:predicates
+   
+    (is_loc ?obj - object ?loc - location)  ; Object is at a location
+    
+    (have_garbage ?garbage - garbageSubstance) ; Have Garbage (person Carry Garbage) I assign the limit equal to 1 person carry 1 garbage at a time
+   
+    (garbage_in_bin ?garbage - garbageSubstance ?bin - DustBin) ; Garbage in bin (Check Garbage in bin or not)
+    
+    ; Levels of Dustbins (Clear, Half, Full )
+    (bin_full ?bin - DustBin) ; Dustbin is full 
+    (bin_half ?bin - DustBin) ; Dustbin is Half
+    (bin_clear ?bin - DustBin) ; Dustbin is Empty
+    
+    (have_newBag ?bag - newBag) ; Person Carry Newbag
+    (have_oldBag ?bag - oldBag) ; Person Carry OldBag
+    
+    (related ?thing_1 ?thing_2 - object) ; It is really important because if we assign related it is easy to different things
+    
+    ; Person Capacity (Person Only carry one thing at a time)
+    (person_hands_full ?person_capacity - HumanCarry) ; Person Hands Full
+    (person_hands_empty ?person_capacity - HumanCarry) ; Person Hands Empty
+    
+    (old_bag_dumb ?cityBin - CityBin ?q - quantity) ; Old Bag Dumb (Old Bag Dumb into Citybins)
+    
+    
+    
+    ;;(is_morning ?time - Time)
+    ;;(is_evening ?time - Time)
+    ;;(is_night ?time - Time)
+    
+    
+    ;; It is usefull for citybins 
+    (collected_cityBins_garbage ?truck - Truck) ; Truck Collected Citybins garbage from CityBins
+    (disposed_cityBins_garbage ?truck - Truck) ; Truck Disposed Citybins garbage into dumpyard
+    
+    
+    (plus1 ?q1 ?q2 - quantity) ; For Iteration like Capacity of the truck
+    
+    (Truck_capacity ?truck - Truck ?q - quantity) ; Truck Total Capacity 
+    
+    (between ?obj - object ?q_less_one ?q - quantity) ;; It is controlled the capability when the truck will come to deposite the citybins garbage to the dumpyard
+    
+
+  )
+  
+  
+  ;; Functions
+  (:functions
+    ;(distance ?from ?to - location)
+    ;(per_km_cost ?truck - Truck)
+    (total-cost)
+  )
+
+
+  ;; ========================== Person Move From One Place To The Bin ===============================================
+  
+  ;; Actions
+  (:action Move_To_Bin
+    :parameters (?who - Human ?bin - DustBin ?garbage - garbageSubstance ?person_capacity - HumanCarry ?from - location ?to - location)
+    :precondition (and (related ?who ?person_capacity)(related ?who ?bin)(person_hands_full ?person_capacity)(related ?bin ?garbage)(have_garbage ?garbage)(is_loc ?who ?from)(is_loc ?bin ?to))
+    :effect (and (not (is_loc ?who ?from))(is_loc ?who ?to) 
+    		(increase (total-cost) 1)
+    		)
+   )
+   
+   ;; ========================== Person Move Command (Move one place to another) ===============================================
+   
+   (:action Move
+    :parameters (?who - Human ?person_capacity - HumanCarry ?to - location ?from - location)
+    :precondition (and (related ?who ?person_capacity)(person_hands_empty ?person_capacity)(is_loc ?who ?to))
+    :effect (and (not (is_loc ?who ?to))(is_loc ?who ?from) 
+		(increase (total-cost) 1)    	
+    		)
+   )
+   
+   ;; ========================== Person Move From One Place to One Room ===============================================
+   
+   (:action Move_To_Room
+    :parameters (?who - Human ?bin - DustBin ?room - Room ?garbage - garbageSubstance ?person_capacity - HumanCarry ?from - location ?to - location)
+    :precondition (and (related ?who ?person_capacity)(related ?who ?bin)(related ?who ?room)(person_hands_empty ?person_capacity)(related ?bin ?garbage)(is_loc ?who ?from)(is_loc ?garbage ?to)(is_loc ?room ?to))
+    :effect (and (not (is_loc ?who ?from))(is_loc ?who ?to)(have_garbage ?garbage)(not(is_loc ?garbage ?to))(not(person_hands_empty ?person_capacity))(person_hands_full ?person_capacity)
+    		(increase (total-cost) 1)
+    		)
+   )
+  
+  ;; ========================== Dustbins Filled Partially (Means Dustbin Was Empty Now Half Filled) ===============================================
+  
+  (:action Fill_Bin_Partially
+     :parameters (?who - Human ?bin - DustBin ?garbage - garbageSubstance ?person_capacity - HumanCarry ?pos - location)
+     :precondition (and(related ?who ?person_capacity)(related ?who ?bin)(person_hands_full ?person_capacity)(related ?bin ?garbage)(have_garbage ?garbage)(bin_clear ?bin)(is_loc ?who ?pos)(is_loc ?bin ?pos))
+     :effect (and(not(have_garbage ?garbage))(not(bin_clear ?bin))(bin_half ?bin)(garbage_in_bin ?garbage ?bin)(not(person_hands_full ?person_capacity))(person_hands_empty ?person_capacity)
+     		(increase (total-cost) 1)
+     		)
+  )
+  
+  ;; ========================== Dustbins Filled Completely (Means Dustbin Was Half Now Full Filled) ===============================================
+  
+  (:action Fill_Bin_Completely
+     :parameters (?who - Human ?bin - DustBin ?garbage - garbageSubstance ?person_capacity - HumanCarry ?pos - location)
+     :precondition (and(related ?who ?person_capacity)(related ?who ?bin)(person_hands_full ?person_capacity)(related ?bin ?garbage)(have_garbage ?garbage)(bin_half ?bin)(is_loc ?who ?pos)(is_loc ?bin ?pos))
+     :effect (and(not(have_garbage ?garbage))(not(bin_half ?bin))(bin_full ?bin)(garbage_in_bin ?garbage ?bin)(not(person_hands_full ?person_capacity))(person_hands_empty ?person_capacity)
+     		(increase (total-cost) 1)
+     		)
+  )
+  
+  
+  ;; ========================== When Dustbin Fully Completed, Person Go to take newbag ===============================================
+  
+  (:action Get_New_Bag
+     :parameters (?who - Human ?bin - DustBin ?garbage - garbageSubstance ?NewBag - newBag ?person_capacity - HumanCarry ?from - location ?to - location)
+     :precondition (and(related ?who ?person_capacity)(related ?bin ?garbage)(garbage_in_bin ?garbage ?bin)(related ?who ?bin)(related ?bin ?NewBag)(person_hands_empty ?person_capacity)(bin_full ?bin)(is_loc ?who ?from)(is_loc ?NewBag ?to))
+     :effect (and(not(is_loc ?who ?from))(have_newBag ?NewBag)(is_loc ?who ?to)(not(person_hands_empty ?person_capacity))(person_hands_full ?person_capacity)
+     		(increase (total-cost) 1)
+     		)
+  )
+  
+  ;; ========================== Person Have Newbag Now he mpve to the bin to change the bag  ===============================================
+  
+  (:action Move_To_Bin_To_Change_Bag
+     :parameters (?who - Human ?bin - DustBin ?NewBag - newBag ?person_capacity - HumanCarry ?from - location ?to - location)
+     :precondition (and(related ?who ?person_capacity)(related ?who ?bin)(related ?bin ?NewBag)(person_hands_full ?person_capacity)(have_newBag ?NewBag)(bin_full ?bin)(is_loc ?who ?from)(is_loc ?bin ?to))
+     :effect (and(not(is_loc ?who ?from))(is_loc ?who ?to)
+     		(increase (total-cost) 1)
+     		)
+  )
+  
+  ;; ========================== Person is now in bin position and want to change the bag After that person have oldBag (Filled one)  ===============================================
+  
+  (:action Detach_Old_Bag
+     :parameters (?who - Human ?bin - DustBin ?NewBag - newBag ?OldBag - oldBag ?person_capacity - HumanCarry ?pos - location)
+     :precondition (and(related ?who ?person_capacity)(related ?who ?bin)(related ?bin ?NewBag)(related ?bin ?OldBag)(person_hands_full ?person_capacity)(have_newBag ?NewBag)(bin_full ?bin)(is_loc ?who ?pos)(is_loc ?bin ?pos))
+     :effect (and(not(have_newBag ?NewBag))(not(bin_full ?bin))(bin_clear ?bin)(have_oldBag ?OldBag)
+     		(increase (total-cost) 1)
+     		)
+  )
+  
+  ;; ========================== Now person have oldbag now he need to dumb thing old bag to the cityBIn  ===============================================
+  
+  (:action Move_Person_To_CityBin
+      :parameters (?who - Human ?q ?q_less_one - quantity ?cityBin - CityBin ?bin - DustBin ?OldBag - oldBag ?person_capacity - HumanCarry ?from - location ?to - location )
+      :precondition (and(plus1 ?q_less_one ?q)(old_bag_dumb ?cityBin ?q)(related ?who ?person_capacity)(related ?who ?bin)(related ?bin ?OldBag)(person_hands_full ?person_capacity)(related ?cityBin ?bin)(have_oldBag ?OldBag)(is_loc ?who ?from)(is_loc ?cityBin ?to))
+      :effect (and(not(is_loc ?who ?from))(is_loc ?who ?to)(not(have_oldBag ?OldBag))(not(person_hands_full ?person_capacity))(person_hands_empty ?person_capacity)(not(old_bag_dumb ?cityBin ?q))(old_bag_dumb ?cityBin ?q_less_one)
+      (increase (total-cost) 1)
+      )
+  )
+  
+  ;; ========================== Truck WIll Come and take the CityBins Garbage (According to there capacity)  ===============================================
+  
+  (:action Load_City_Garbage
+    :parameters (?truck - Truck ?q ?q_less_one ?q_bag ?q_less_bag - quantity ?bin - DustBin ?cityBin - CityBin ?from ?to - location)
+    :precondition (and(plus1 ?q_less_one ?q)(Truck_capacity ?truck ?q)(old_bag_dumb ?cityBin ?q_less_bag)(between ?cityBin ?q_less_bag ?q_bag)(related ?cityBin ?bin)(related ?truck ?cityBin)(is_loc ?truck ?from)(is_loc ?cityBin ?to))
+    :effect (and(not(is_loc ?truck ?from))(is_loc ?truck ?to)(collected_cityBins_garbage ?truck)
+    	(not(Truck_capacity ?truck ?q))(Truck_capacity ?truck ?q_less_one)
+    	(increase (total-cost) 1)
+    )
+  
+  )
+  
+  ;; ========================== When Truck Take the citybins or truck capacity full it will come to the dumpyard to dumpy all garbage of the city  ===============================================
+  
+  (:action UnLoad_City_Garbage
+    :parameters (?truck - Truck  ?q ?q_less_one  - quantity ?cityBin - CityBin ?dumpyard - Dumpyard ?from ?to - location)
+    :precondition (and(collected_cityBins_garbage ?truck)(Truck_capacity ?truck ?q_less_one)(between ?truck ?q_less_one ?q)(related ?truck ?cityBin)(related ?dumpyard ?truck)(is_loc ?truck ?from)(is_loc ?dumpyard ?to))
+    :effect (and(not(is_loc ?truck ?from))(is_loc ?truck ?to)(not(collected_cityBins_garbage ?truck))(disposed_cityBins_garbage ?truck)
+    	(increase (total-cost) 1)
+    	)
+  
+  )
+  
+  
+)

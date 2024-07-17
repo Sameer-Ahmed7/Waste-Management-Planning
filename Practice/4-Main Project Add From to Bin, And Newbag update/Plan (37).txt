@@ -1,0 +1,5 @@
+(move_to_newbag person organic_bin new_bag pos_1 pos_5)
+(move_to_bin person organic_bin pos_5 pos_4)
+(full_empty_trashed person organic_bin new_bag paper_bin old_bag pos_4)
+(empty_half_trashed person organic_bin organic pos_4)
+(move_from_bin person organic_bin organic_bin pos_4 pos_1)
