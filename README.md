@@ -21,7 +21,7 @@ The main objective of the project is to optimize the waste collection process by
 
 The project defines various scenarios with different parameters such as the number of persons, rooms, types of garbage, dustbins, city bins, and trucks. Each problem is analyzed based on total cost and distance cost calculations.
 <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/Different_Problems.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/Different_Problems.png" width="50%" height="50%" title="Different Problems">
   </p>
 
 ## Domain
@@ -39,11 +39,11 @@ The domain consists of various objects and actions, including:
 Two different metrics are used in the project:
 - **Total Cost Only:** Cost=1 (for every action), Minimize total cost.
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/metrics_1.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/metrics_1.png" width="90%" height="90%" title="metrics 1">
   </p>
 - **Distance Cost Calculation:** Cost depends on distance, Minimize total cost.
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/metrics_2.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/metrics_2.png" width="90%" height="90%" title="metrics 2">
   </p>
 
 ## Planner
@@ -119,28 +119,28 @@ The project evaluates various parameters such as plan length steps, execution ti
 The results are presented for different problems using various heuristics. 
 - Blind (A*)
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_blind.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_blind.png" width="50%" height="50%" title="heurastic blind">
   </p>
   
   > In problem 7 (N/A) means it is not executable, because of too much complexity planer stop automatically after some hours.
 
 - Hmax (A*)
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_hmax.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_hmax.png" width="50%" height="50%" title="heurastic hmax">
   </p>
   
   > In problem 7 (N/A) means it is not executable, because of too much complexity planer stop automatically after some hours.
 
 - Hadd (A*)
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_hadd.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_hadd.png" width="50%" height="50%" title="heurastic hadd">
   </p>
   
   > hadd executed problem 7.
   
 - Hff (A*)
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_hff.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/heurastic_hff.png" width="50%" height="50%" title="heurastic hff">
   </p>
   
   > In problem 7 (N/A) means it is not executable, because of too much complexity planer stop automatically after some hours.
@@ -153,21 +153,21 @@ Detailed analysis and comparison.
 
 - Plan Length Step(s)
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/plan_length_step.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/plan_length_step.png" width="50%" height="50%" title="plan length step">
   </p>
 - Generated States (s)
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/generated_states.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/generated_states.png" width="50%" height="50%" title="generated states">
   </p>
 
 - Execution Time (Seconds)
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/execution_time.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/execution_time.png" width="50%" height="50%" title="execution time">
   </p>
 
 - Cost
   <p align="center">
-  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/cost.png" width="50%" height="50%" title="General Problem Flow Diagram">
+  <img src="https://github.com/Sameer-Ahmed7/Waste-Management-Planning/blob/main/assets/cost.png" width="50%" height="50%" title="Cost">
   </p>
 
 ## Problems
